@@ -116,7 +116,6 @@ func (req *Request) DoReq() (*Response, error) {
 	resp, err := req.Client.Do(doReq)
 
 	if err != nil {
-		log.Fatal(err)
 		return nil, err
 	}
 	defer resp.Body.Close()
@@ -158,12 +157,10 @@ func GetRequestRaw(req *http.Request) (string, error) {
 		requestBodyReader, err := req.GetBody()
 
 		if err != nil {
-			log.Fatal(err)
 			return "", err
 		}
 		res, err := ioutil.ReadAll(requestBodyReader)
 		if err != nil {
-			log.Fatal(err)
 			return "", err
 		}
 		requestBody = res
