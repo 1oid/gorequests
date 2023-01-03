@@ -101,11 +101,10 @@ func (req *Request) PrepareRequest() *http.Request {
 	return doReqHttp
 }
 
-func (req *Request) DoReq() *Response {
+func (req *Request) DoReq() (*Response, error) {
 	client, err := InitialClient(15, req.Proxy, false)
 	if err != nil {
-		log.Fatal(err)
-		return nil
+		return nil, err
 	}
 	req.Client = client
 
@@ -118,16 +117,21 @@ func (req *Request) DoReq() *Response {
 
 	if err != nil {
 		log.Fatal(err)
+		return nil, err
 	}
 	defer resp.Body.Close()
 	body, err := ioutil.ReadAll(resp.Body)
+
+	if err != nil {
+		return nil, nil
+	}
 
 	return &Response{
 		MetaResponse: *resp,
 		StatusCode:   resp.StatusCode,
 		Headers:      resp.Header,
 		Body:         body,
-	}
+	}, nil
 }
 
 func GetRequestRaw(req *http.Request) (string, error) {
@@ -167,4 +171,3 @@ func GetRequestRaw(req *http.Request) (string, error) {
 	requestRaw.Write(requestBody)
 	return requestRaw.String(), nil
 }
-
