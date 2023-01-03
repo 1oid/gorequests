@@ -123,7 +123,7 @@ func (req *Request) DoReq() (*Response, error) {
 	body, err := ioutil.ReadAll(resp.Body)
 
 	if err != nil {
-		return nil, nil
+		return nil, err
 	}
 
 	return &Response{
